@@ -5,13 +5,13 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-const ChartComponent = ({ sharedVariable, sharedLabel }) => {
+const ChartComponent = ({ sharedVariable, sharedLabel, dataArray, sharedTime, sharedTemp }) => {
   const [data, setData] = useState({
-    labels: [],
+    labels: [sharedTime],
     datasets: [
       {
         label: "Temperature (C)",
-        data: [],
+        data: [sharedTemp],
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -33,12 +33,14 @@ const ChartComponent = ({ sharedVariable, sharedLabel }) => {
     ],
   });
 
-  data.datasets.forEach((dataset) => {
-    dataset.data.push(sharedVariable);
-  });
+  // data.datasets.forEach((dataset) => {
+  //   dataset.data.push(dataArray[dataArray.length - 1].temp);
+  // });
 
-  data.labels.push(sharedLabel);
+  // data.labels.push(dataArray[dataArray.length - 1].time);
 
+  let test = JSON.stringify(sharedTemp);
+  let test2 = JSON.stringify(sharedTime);
   
   const options = {
     scales: {
@@ -62,7 +64,9 @@ const ChartComponent = ({ sharedVariable, sharedLabel }) => {
       <Row>
         <Col><Line data={data} options={options} /></Col>
       </Row>
-    </Container>    
+    </Container>   
+    <p>{test}</p> 
+    <p>{test2}</p>
     </>
     
   );
