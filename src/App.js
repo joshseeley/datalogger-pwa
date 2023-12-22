@@ -293,7 +293,7 @@ function App() {
         // Check if the value is not the header ("Time") before adding it to the result array
         if (temp !== "Temp") {
           // Push the time value into the result array
-          tempValues.push(temp);
+          tempValues.push(Number(temp));
         }
       });
 
