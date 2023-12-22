@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import "./App.css";
 import MyModule from "./components/MyModule";
 import About from "./components/About";
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -15,6 +15,7 @@ import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 
 import ChartComponent from "./components/ChartComponent";
+import ChartPower from "./components/ChartPower";
 import { LinkContainer } from "react-router-bootstrap";
 import { Button } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
@@ -30,6 +31,10 @@ function App() {
   const [sharedVariableThrust, setSharedVariableThrust] = useState(5);
   const [sharedTemp, setSharedTemp] = useState([]);
   const [sharedTime, setSharedTime] = useState([]);
+  const [sharedThrust, setSharedThrust] = useState([]);
+  const [sharedAmps, setSharedAmps] = useState([]);
+  const [sharedVolts, setSharedVolts] = useState([]);
+
 
   const updateSharedVariable = (
     newValue,
@@ -52,7 +57,7 @@ function App() {
   const [dataArray, setDataArray] = useState([
     {
       time: "Time",
-      thust: "Thrust",
+      thrust: "Thrust",
       amps: "Amps",
       volts: "Volts",
       temp: "Temp",
@@ -222,7 +227,7 @@ function App() {
     const voltsValue = splitArray[2];
     const tempValue = splitArray[3];
 
-    const thustFinal = removeNullBytes(thrustValue); //*2.2046;
+    const thrustFinal = removeNullBytes(thrustValue); //*2.2046;
     const ampsFinal = removeNullBytes(ampsValue);
     const voltsFinal = removeNullBytes(voltsValue);
     const tempFinal = removeNullBytes(tempValue);
@@ -231,7 +236,7 @@ function App() {
 
     const newData = {
       time: timeStamp,
-      thust: thustFinal,
+      thrust: thrustFinal,
       amps: ampsFinal,
       volts: voltsFinal,
       temp: tempFinal,
@@ -249,8 +254,19 @@ function App() {
 
     //get temp array
     let temperatureArray = getTemperatureArray(dataArray);
-    console.log(JSON.stringify(temperatureArray));
     setSharedTemp(temperatureArray);
+
+    //get thrust array
+    let thrustArray = getThrustArray(dataArray);
+    setSharedThrust(thrustArray);
+
+    //get amps array
+    let ampsArray = getAmpsArray(dataArray);
+    setSharedAmps(ampsArray);
+
+    //get volts array
+    let voltsArray = getVoltsArray(dataArray);
+    setSharedVolts(voltsArray);
 
     function getTimeArray(data) {
       // Initialize an empty array to store the extracted time values
@@ -290,11 +306,68 @@ function App() {
       return tempValues;
     }
 
+    function getThrustArray(data) {
+      // Initialize an empty array to store the extracted time values
+      const thrustValues = [];
+
+      // Loop through the array and extract "time" values
+      data.forEach((item) => {
+        // Access the "time" property of each object
+        const thrust = item.thrust;
+
+        // Check if the value is not the header ("Time") before adding it to the result array
+        if (thrust !== "Thrust") {
+          // Push the time value into the result array
+          thrustValues.push(Number(thrust));
+        }
+      });
+
+      return thrustValues;
+    }
+
+    function getAmpsArray(data) {
+      // Initialize an empty array to store the extracted time values
+      const ampsValues = [];
+
+      // Loop through the array and extract "time" values
+      data.forEach((item) => {
+        // Access the "time" property of each object
+        const amps = item.amps;
+
+        // Check if the value is not the header ("Time") before adding it to the result array
+        if (amps !== "Amps") {
+          // Push the time value into the result array
+          ampsValues.push(Number(amps));
+        }
+      });
+
+      return ampsValues;
+    }
+
+    function getVoltsArray(data) {
+      // Initialize an empty array to store the extracted time values
+      const voltsValues = [];
+
+      // Loop through the array and extract "time" values
+      data.forEach((item) => {
+        // Access the "time" property of each object
+        const volts = item.volts;
+
+        // Check if the value is not the header ("Time") before adding it to the result array
+        if (volts !== "Volts") {
+          // Push the time value into the result array
+          voltsValues.push(Number(volts));
+        }
+      });
+
+      return voltsValues;
+    }
+
     updateSharedVariable(
       dataArray[dataArray.length - 1].temp,
       dataArray[dataArray.length - 1].volts,
       dataArray[dataArray.length - 1].amps,
-      dataArray[dataArray.length - 1].thust,
+      dataArray[dataArray.length - 1].thrust,
       dataArray[dataArray.length - 1].time
     );
 
@@ -305,7 +378,7 @@ function App() {
         .join("");
     }
 
-    setThrustState(thustFinal);
+    setThrustState(thrustFinal);
     setCurrentState(ampsFinal);
     setVoltageState(voltsFinal);
     setTempState(tempFinal);
@@ -352,14 +425,19 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <LinkContainer to="/data">
-                <Nav.Link>Data</Nav.Link>
+              
+              
+              <LinkContainer to="/graph2">
+                <Nav.Link>Thrust</Nav.Link>
               </LinkContainer>
               <LinkContainer to="/graph">
-                <Nav.Link>Graph</Nav.Link>
+                <Nav.Link>Temp</Nav.Link>
               </LinkContainer>
               <LinkContainer to="/about">
                 <Nav.Link>About</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/data">
+                <Nav.Link>AllData</Nav.Link>
               </LinkContainer>
             </Nav>
           </Navbar.Collapse>
@@ -403,6 +481,19 @@ function App() {
               sharedVariable={sharedVariable}
               dataArray={dataArray} 
               sharedTemp={sharedTemp}  
+              sharedTime={sharedTime}          
+            />
+          }
+        />
+        <Route
+          path="/graph2"
+          element={
+            <ChartPower
+              sharedVariable={sharedVariable}
+              dataArray={dataArray} 
+              sharedThrust={sharedThrust}  
+              sharedVolts={sharedVolts}
+              sharedAmps={sharedAmps}
               sharedTime={sharedTime}          
             />
           }
