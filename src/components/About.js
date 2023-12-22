@@ -8,9 +8,12 @@ const About = () => (
   <>
   <Container>
       <Row>
-        <Col>
-        <h2>About</h2>
-    <p>This is the about page.</p>
+        <Col>       
+    <h2>About</h2>
+    <p>This app connects to the PIM test box and initializes a data stream.</p>
+    <p>Disconnect will terminate the data stream. </p>
+    <p>The download button will create a csv of the totalized data set from connection. </p>
+
         </Col>
       </Row>
     </Container>      

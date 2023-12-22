@@ -9,7 +9,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 
-import Image from "./images/icon.png";
+import Image from "./images/icons8.png";
 
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
@@ -365,7 +365,7 @@ function App() {
           </Navbar.Collapse>
         </Navbar>
       
-      <Container>
+        <Container>
         <Card>
         <Card.Body>
           <Card.Title>Bluetooth BLE Connections</Card.Title>
@@ -409,6 +409,8 @@ function App() {
         />
         <Route path="/about" element={<About />} />
       </Routes>
+      
+      
       
     </>
   );
