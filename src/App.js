@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import "./App.css";
-import Connect from "./components/Connect";
 import MyModule from "./components/MyModule";
 import About from "./components/About";
 import { Route, Routes, Link } from "react-router-dom";
@@ -19,8 +18,6 @@ import ChartComponent from "./components/ChartComponent";
 import { LinkContainer } from "react-router-bootstrap";
 import { Button } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -31,7 +28,6 @@ function App() {
   const [sharedVariableVolts, setSharedVariableVolts] = useState(5);
   const [sharedVariableAmps, setSharedVariableAmps] = useState(5);
   const [sharedVariableThrust, setSharedVariableThrust] = useState(5);
-  const [sharedLabel, setSharedLabel] = useState("");
   const [sharedTemp, setSharedTemp] = useState([]);
   const [sharedTime, setSharedTime] = useState([]);
 
@@ -40,13 +36,12 @@ function App() {
     newVolts,
     newAmps,
     newThrust,
-    newLabel
+    
   ) => {
     setSharedVariable(newValue);
     setSharedVariableVolts(newVolts);
     setSharedVariableAmps(newAmps);
     setSharedVariableThrust(newThrust);
-    setSharedLabel(newLabel);
   };
 
   const [thrustState, setThrustState] = useState(0);
@@ -219,12 +214,7 @@ function App() {
   // Data receiving
   function handleCharacteristicValueChanged(event) {
     let value = new TextDecoder().decode(event.target.value); //value is a string
-    // let valueString = value.toString();
-    // console.log(value, 'in');
-
-    console.log("value is: ");
-    console.log(value);
-
+    
     const splitArray = value.split(" ");
 
     const thrustValue = splitArray[0];
@@ -300,8 +290,6 @@ function App() {
       return tempValues;
     }
 
-    let keysArray = Object.keys(newData);
-
     updateSharedVariable(
       dataArray[dataArray.length - 1].temp,
       dataArray[dataArray.length - 1].volts,
@@ -309,18 +297,6 @@ function App() {
       dataArray[dataArray.length - 1].thust,
       dataArray[dataArray.length - 1].time
     );
-
-    console.log("temporary data type:");
-    console.log(typeof tempData);
-    console.log("temporary data is:");
-    console.log(tempData);
-    console.log("The data array is ");
-    console.log(dataArray);
-    console.log(`timestamp: ${timeStamp}`);
-    console.log(`thrust: ${thustFinal}`);
-    console.log(`amps: ${ampsFinal}`);
-    console.log(`volts: ${voltsFinal}`);
-    console.log(`temp: ${tempFinal}`);
 
     function removeNullBytes(str) {
       return str
@@ -361,10 +337,9 @@ function App() {
   }
 
   return (
-    <>
-      <Container fluid>
-        <Navbar expand="lg" className="bg-body-tertiary">
-          <Navbar.Brand href="#home">
+    <>  
+        <Navbar bg="dark" variant="dark" >
+          <Navbar.Brand >
             <img
               src={Image}
               width="30"
@@ -377,9 +352,6 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              {/* <LinkContainer to="/">
-                  <Nav.Link>Connect</Nav.Link>
-                </LinkContainer> */}
               <LinkContainer to="/data">
                 <Nav.Link>Data</Nav.Link>
               </LinkContainer>
@@ -392,8 +364,9 @@ function App() {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-      </Container>
-      <Card>
+      
+      <Container>
+        <Card>
         <Card.Body>
           <Card.Title>Bluetooth BLE Connections</Card.Title>
           <Button variant="primary" onClick={connect}>
@@ -408,16 +381,9 @@ function App() {
           <Card.Text>Connection status: {status}</Card.Text>
         </Card.Body>
       </Card>
-      <Routes>
-        {/* <Route
-            path="/"
-            element={
-              <Connect
-                sharedVariable={sharedVariable}
-                updateSharedVariable={updateSharedVariable}
-              />
-            }
-          /> */}
+      </Container>
+      
+      <Routes>        
         <Route
           path="/data"
           element={
@@ -435,7 +401,6 @@ function App() {
           element={
             <ChartComponent
               sharedVariable={sharedVariable}
-              sharedLabel={sharedLabel} 
               dataArray={dataArray} 
               sharedTemp={sharedTemp}  
               sharedTime={sharedTime}          
@@ -444,6 +409,7 @@ function App() {
         />
         <Route path="/about" element={<About />} />
       </Routes>
+      
     </>
   );
 }

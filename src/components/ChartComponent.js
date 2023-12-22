@@ -1,14 +1,11 @@
 // src/ChartComponent.js
-import React, { useState } from "react";
+import React from "react";
 import { Line } from "react-chartjs-2";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-const ChartComponent = ({
-  sharedVariable,
-  sharedLabel,
-  dataArray,
+const ChartComponent = ({  
   sharedTime,
   sharedTemp,
 }) => {
