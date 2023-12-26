@@ -25,10 +25,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 Chart.register(CategoryScale);
 
 function App() {
-  const [sharedVariable, setSharedVariable] = useState(5);
-  const [sharedVariableVolts, setSharedVariableVolts] = useState(5);
-  const [sharedVariableAmps, setSharedVariableAmps] = useState(5);
-  const [sharedVariableThrust, setSharedVariableThrust] = useState(5);
+  const [sharedVariable, setSharedVariable] = useState(0);
+  const [sharedVariableVolts, setSharedVariableVolts] = useState(0);
+  const [sharedVariableAmps, setSharedVariableAmps] = useState(0);
+  const [sharedVariableThrust, setSharedVariableThrust] = useState(0);
   const [sharedTemp, setSharedTemp] = useState([]);
   const [sharedTime, setSharedTime] = useState([]);
   const [sharedThrust, setSharedThrust] = useState([]);
