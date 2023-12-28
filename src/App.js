@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import "./App.css";
 import MyModule from "./components/MyModule";
@@ -35,14 +35,10 @@ function App() {
   const [sharedAmps, setSharedAmps] = useState([]);
   const [sharedVolts, setSharedVolts] = useState([]);
 
+  const [seconds, setSeconds] = useState(0);
+  const [intervalId, setIntervalId] = useState(null);
 
-  const updateSharedVariable = (
-    newValue,
-    newVolts,
-    newAmps,
-    newThrust,
-    
-  ) => {
+  const updateSharedVariable = (newValue, newVolts, newAmps, newThrust) => {
     setSharedVariable(newValue);
     setSharedVariableVolts(newVolts);
     setSharedVariableAmps(newAmps);
@@ -67,6 +63,31 @@ function App() {
 
   console.log("dataArray:");
   console.log(dataArray);
+
+  //Timer functionality
+  useEffect(() => {
+    return () => {
+      // Cleanup function to clear the interval when the component is unmounted
+      clearInterval(intervalId);
+    };
+  }, [intervalId]);
+
+  function handleStartClick() {
+    if (!intervalId) {
+      const id = setInterval(() => {
+        setSeconds((prevSeconds) => prevSeconds + 1);
+      }, 1000);
+      setIntervalId(id);
+    }
+  }
+
+  function handleStopClick() {
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+      setSeconds(0);
+    }
+  }
 
   // Launch Bluetooth device chooser and connect to the selected
   function connect() {
@@ -159,6 +180,7 @@ function App() {
   // Enable the characteristic changes notification
   function startNotifications(characteristic) {
     console.log("Starting notifications...");
+    handleStartClick();
     setStatus("Starting notifications...");
 
     return characteristic.startNotifications().then(() => {
@@ -174,6 +196,8 @@ function App() {
   }
 
   function disconnect() {
+    handleStopClick();
+
     console.log(deviceCache);
 
     if (deviceCache) {
@@ -219,7 +243,7 @@ function App() {
   // Data receiving
   function handleCharacteristicValueChanged(event) {
     let value = new TextDecoder().decode(event.target.value); //value is a string
-    
+
     const splitArray = value.split(" ");
 
     const thrustValue = splitArray[0];
@@ -410,58 +434,57 @@ function App() {
   }
 
   return (
-    <>  
-        <Navbar bg="dark" variant="dark" >
-          <Navbar.Brand >
-            <img
-              src={Image}
-              width="30"
-              height="30"
-              className="d-inline-block align-top"
-              alt="React Bootstrap logo"
-            />
-          </Navbar.Brand>
+    <>
+      <Navbar bg="dark" variant="dark">
+        <Navbar.Brand>
+          <img
+            src={Image}
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="React Bootstrap logo"
+          />
+        </Navbar.Brand>
 
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              
-              
-              <LinkContainer to="/graph2">
-                <Nav.Link>Thrust</Nav.Link>
-              </LinkContainer>
-              <LinkContainer to="/graph">
-                <Nav.Link>Temp</Nav.Link>
-              </LinkContainer>
-              <LinkContainer to="/about">
-                <Nav.Link>About</Nav.Link>
-              </LinkContainer>
-              <LinkContainer to="/data">
-                <Nav.Link>AllData</Nav.Link>
-              </LinkContainer>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-      
-        <Container>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <LinkContainer to="/graph2">
+              <Nav.Link>Thrust</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/graph">
+              <Nav.Link>Temp</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/about">
+              <Nav.Link>About</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/data">
+              <Nav.Link>AllData</Nav.Link>
+            </LinkContainer>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+
+      <Container>
         <Card>
-        <Card.Body>
-          <Card.Title>Bluetooth BLE Connections</Card.Title>
-          <Button variant="primary" onClick={connect}>
-            Connect
-          </Button>{" "}
-          <Button variant="primary" onClick={disconnect}>
-            disconnect
-          </Button>{" "}
-          <Button variant="primary" onClick={downloadCSV}>
-            download
-          </Button>{" "}
-          <Card.Text>Connection status: {status}</Card.Text>
-        </Card.Body>
-      </Card>
+          <Card.Body>
+            <Card.Title>Bluetooth BLE Connections</Card.Title>
+            <p>Connection time: {seconds} seconds</p>
+            <Button variant="primary" onClick={connect}>
+              Connect
+            </Button>{" "}
+            <Button variant="primary" onClick={disconnect}>
+              disconnect
+            </Button>{" "}
+            <Button variant="primary" onClick={downloadCSV}>
+              download
+            </Button>{" "}
+            <Card.Text>Connection status: {status}</Card.Text>
+          </Card.Body>
+        </Card>
       </Container>
-      
-      <Routes>        
+
+      <Routes>
         <Route
           path="/data"
           element={
@@ -479,9 +502,9 @@ function App() {
           element={
             <ChartComponent
               sharedVariable={sharedVariable}
-              dataArray={dataArray} 
-              sharedTemp={sharedTemp}  
-              sharedTime={sharedTime}          
+              dataArray={dataArray}
+              sharedTemp={sharedTemp}
+              sharedTime={sharedTime}
             />
           }
         />
@@ -490,19 +513,16 @@ function App() {
           element={
             <ChartPower
               sharedVariable={sharedVariable}
-              dataArray={dataArray} 
-              sharedThrust={sharedThrust}  
+              dataArray={dataArray}
+              sharedThrust={sharedThrust}
               sharedVolts={sharedVolts}
               sharedAmps={sharedAmps}
-              sharedTime={sharedTime}          
+              sharedTime={sharedTime}
             />
           }
         />
         <Route path="/about" element={<About />} />
       </Routes>
-      
-      
-      
     </>
   );
 }

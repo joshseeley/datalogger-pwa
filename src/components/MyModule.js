@@ -1,7 +1,5 @@
 // src/MyModule/MyModule.js
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
-import Table from "react-bootstrap/Table";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -10,8 +8,7 @@ const MyModule = ({
   sharedVariable,
   sharedVariableAmps,
   sharedVariableVolts,
-  sharedVariableThrust,
-  updateSharedVariable,
+  sharedVariableThrust,  
 }) => {
   return (
     <>
