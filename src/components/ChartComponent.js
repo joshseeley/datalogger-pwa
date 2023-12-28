@@ -44,6 +44,7 @@ const ChartComponent = ({
         beginAtZero: true,
       },
     },
+    maintainAspectRatio: false
   };
 
   return (

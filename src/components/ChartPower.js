@@ -93,6 +93,7 @@ const ChartPower = ({
         beginAtZero: true,
       },
     },
+    maintainAspectRatio: false
   };
 
   return (
