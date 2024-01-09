@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import MyModule from "./components/MyModule";
 import About from "./components/About";
+import Connect from "./components/Connect";
+
 import { Route, Routes } from "react-router-dom";
 
 import Container from "react-bootstrap/Container";
@@ -37,6 +39,10 @@ function App() {
 
   const [seconds, setSeconds] = useState(0);
   const [intervalId, setIntervalId] = useState(null);
+
+  const [isContainerVisible, setIsContainerVisible] = useState(true);
+
+
 
   const updateSharedVariable = (newValue, newVolts, newAmps, newThrust) => {
     setSharedVariable(newValue);
@@ -433,6 +439,14 @@ function App() {
     return rows.join("\n");
   }
 
+  const handleNavClickShow = () => {
+    setIsContainerVisible(true);
+  };
+
+  const handleNavClickHide = () => {
+    setIsContainerVisible(false);
+  };
+
   return (
     <>
       <Navbar bg="dark" variant="dark">
@@ -448,24 +462,28 @@ function App() {
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="me-auto">          
+          <LinkContainer to="/connect">
+              <Nav.Link onClick={handleNavClickShow}>Connect</Nav.Link>
+            </LinkContainer>
             <LinkContainer to="/graph2">
-              <Nav.Link>Thrust</Nav.Link>
+              <Nav.Link onClick={handleNavClickHide}>Thrust</Nav.Link>
             </LinkContainer>
             <LinkContainer to="/graph">
-              <Nav.Link>Temp</Nav.Link>
+              <Nav.Link onClick={handleNavClickHide}>Temp</Nav.Link>
+            </LinkContainer>            
+            <LinkContainer to="/data">
+              <Nav.Link onClick={handleNavClickHide}>AllData</Nav.Link>
             </LinkContainer>
             <LinkContainer to="/about">
-              <Nav.Link>About</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/data">
-              <Nav.Link>AllData</Nav.Link>
+              <Nav.Link onClick={handleNavClickHide}>About</Nav.Link>
             </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
 
       <Container>
+      {isContainerVisible && (
         <Card>
           <Card.Body>
             <Card.Title>Bluetooth BLE Connections</Card.Title>
@@ -482,9 +500,14 @@ function App() {
             <Card.Text>Connection status: {status}</Card.Text>
           </Card.Body>
         </Card>
+        )}
       </Container>
 
       <Routes>
+      <Route
+          path="/connect"
+          element={<Connect/>}
+        />
         <Route
           path="/data"
           element={

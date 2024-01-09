@@ -93,12 +93,17 @@ const ChartPower = ({
         beginAtZero: true,
       },
     },
-    maintainAspectRatio: false
+    maintainAspectRatio: true
   };
 
   return (
     <>
-      <Container>
+      <Container
+      style={{
+        height: "80vh", // Set a fixed or percentage height
+        width: "80vw",  // Set a fixed or percentage width
+      }}
+      >
         <Row>
           <Col>
             <Line data={data} options={options} />
